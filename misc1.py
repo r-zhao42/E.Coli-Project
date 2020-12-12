@@ -92,14 +92,14 @@ def get_location(my_data: list) -> Tuple[float, float]:
 
 
 def remove_chars(string: str) -> str:
-    """ Removes any unneccesary characters besides numbers, especially commas
+    """ Removes any unneccessary characters besides numbers, especially commas
 
     Usage:
 
     >>> remove_chars('-1.835, ')
     '-1.835'
     """
-    punctuation = {','}
+    punctuation = {',', '(', ')'}
 
     if not string.isalnum():
         processed = [x for x in string if x not in punctuation]
@@ -202,16 +202,33 @@ def sort_hospitals(hospitals: Any):
     """Sorts hospitals with their name and location in a tuple of latitude and longitude
 
     Preconditions:
-        - len(locations) == len(names)
+        - len([x for x in hosp['Location']]) == len([x for x in hosp['Trust Code']])
     """
     my_list = []
 
     hosp = pd.read_csv(hospitals)
-    locations = [x for x in hosp['Location']]
+    locations = [transform_string_coords(x) for x in hosp['Location']]
     names = [x for x in hosp['Trust Code']]
 
     for i in range(len(locations)):
         my_list.append((names[i], locations[i]))
 
     return my_list
+
+
+def transform_string_coords(coords: str) -> Tuple[float, float]:
+    """Returns the Tuple[float, float] version of the coordinates that were in a string.
+
+    >>> transform_string_coords('(15.235, -56.1265)')
+    (15.235, -56.1265)
+
+    """
+
+    no_brackets_version = remove_chars(coords)
+
+    splits = no_brackets_version.split(' ')
+
+    return splits
+
+    # return float(splits[0]), float(splits[1])
 
