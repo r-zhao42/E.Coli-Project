@@ -218,7 +218,7 @@ def sort_hospitals(hospitals: Any):
 
 def transform_string_coords(coords: str) -> Tuple[float, float]:
     """Returns the Tuple[float, float] version of the coordinates that were in a string.
-
+ -
     >>> transform_string_coords('(15.235, -56.1265)')
     (15.235, -56.1265)
 
@@ -228,7 +228,14 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
 
     splits = no_brackets_version.split(' ')
 
-    return splits
+    return float(splits[0]), float(splits[-1])
 
-    # return float(splits[0]), float(splits[1])
+
+
+def check_space(string: str):
+    """Return if there is a space after a comma. """
+
+    for i in range(len(string)):
+        if string[i] == ',':
+            return string[i+1] == ' '
 
