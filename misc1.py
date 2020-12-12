@@ -23,31 +23,93 @@ import pandas as pd
 import os
 import math
 
-# txt = 'C:/Users/Hayk/Desktop/yur2.txt'
-txt2 = 'Temperature Data/lerwickdata.txt'
-txt3 = 'Monthly E.Coli 2012-2020 with Location.csv'
+# Variables containing the paths for the files and directories. Can be used for testing.
+example_txt_file = 'Temperature Data/lerwickdata.txt'
+hospital_data_with_locations = 'Monthly E.Coli 2012-2020 with Location.csv'
+weather_stations_directory = 'Temperature Data'
 
-# df = pd.read_csv(txt, delimiter='\t', names=['yyyy'])
-gf = pd.read_csv(txt3)
+EARTH_RADIUS = 6373.0  # km
 
-# print(df.head(20))
-locations_list = [x for x in gf['Location']]
-
-
+# Using pandas to read the hospital data with locations csv file.
+gf = pd.read_csv(hospital_data_with_locations)
 
 
-with open(txt2, 'r') as ok:
-    data = ok.readlines()
+def find_closest_weather_stations(hospitals: Any, directory: Any) -> dict:
+    """Returns a dictionary with keys being weather stations and the values being the hospitals that are closest to the
+    weather station"""
 
-    reus = [x.split() for x in data]
+    # Dictionary accumulator that has keys of weather location names and values of closest hospitals
+    my_dict = {}
+
+    sorted_hospitals = sort_hospitals(hospitals)
+    sorted_stations = sort_weather_stations(directory)
+
+    for hospital in sorted_hospitals:
+        min_distance = min([calculate_distance(sorted_stations[x], hospital[1]) for x in sorted_stations])
+
+        for x in sorted_stations:
+            if calculate_distance(sorted_stations[x], hospital[1]) == min_distance:
+                if x in my_dict:
+                    my_dict[x].append(hospital[0])
+
+                else:
+                    my_dict[x] = [hospital[0]]
+
+    return my_dict
 
 
+def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
+    """Returns all the weather stations in the directory, sorted in a dictionary. The keys are the names
+    of the weather stations and the values are their locations."""
 
+    my_dict = {}
+
+    for file in os.listdir(directory):
+        if file.endswith('.txt'):
+            path = directory + '/' + file
+            with open(path, 'r') as new:
+                file_data = new.readlines()
+                listed_data = [x.split() for x in file_data]
+
+            location = get_location(listed_data)
+            my_dict[listed_data[0][0]] = location
+
+    return my_dict
+
+
+def sort_hospitals(hospitals: Any):
+    """Sorts hospitals with their name and location in a tuple of latitude and longitude
+
+    Preconditions:
+        - len([x for x in hosp['Location']]) == len([x for x in hosp['Trust Code']])
+    """
+    # List accumulator that collects tuples of names and locations of individual hospitals
+    my_list = []
+
+    hosp = pd.read_csv(hospitals)
+    locations = [transform_string_coords(x) for x in hosp['Location']]
+    names = [x for x in hosp['Trust Code']]
+
+    for i in range(len(locations)):
+        my_list.append((names[i], locations[i]))
+
+    return my_list
+
+
+# Here we are opening an example .txt file and converting it into a list of lists, where each line is a list.
+with open(example_txt_file, 'r') as fl:
+    data = fl.readlines()
+
+    listed_example_file = [x.split() for x in data]
+
+
+# A helper function for the
 def get_monthly_average(year: int, month: int, my_data: list) -> float:
     """Returns the average from min_temp and max_temp of the given data set
 
     Preconditions:
         - self.year >= 1978
+        - 1 <= self.month <= 12
     """
 
     for x in my_data[1:]:
@@ -76,7 +138,7 @@ def get_location(my_data: list) -> Tuple[float, float]:
 
 
 def remove_chars(string: str) -> str:
-    """ Removes any unneccessary characters besides numbers, especially commas
+    """ A helper function that removes any unneccessary characters besides numbers, especially commas and brackets
 
     Usage:
 
@@ -92,48 +154,6 @@ def remove_chars(string: str) -> str:
 
     else:
         return string
-
-
-my_directory = 'Temperature Data'
-
-
-def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
-    """Returns all the weather stations in the directory, sorted in a dictionary. The keys are the names
-    of the weather stations and the values are their locations."""
-
-    my_dict = {}
-
-    for file in os.listdir(directory):
-        if file.endswith('.txt'):
-            path = directory + '/' + file
-            with open(path, 'r') as new:
-                file_data = new.readlines()
-                listed_data = [x.split() for x in file_data]
-
-            location = get_location(listed_data)
-            my_dict[listed_data[0][0]] = location
-
-    return my_dict
-
-
-# print(get_monthly_average(1995, 3, reus))
-
-
-
-
-# This is the intro of the data. The actual data follows after this.
-# intro = [x for x in data][:5]
-#
-# rest = [x for x in data[5:]]
-#
-#
-# yum = io.StringIO(str(rest))
-# br = pd.read_table(yum)
-
-# print(br)
-
-EARTH_RADIUS = 6373.0  # km
-COURIER_SPEED = 20  # km/h
 
 
 def calculate_distance(location1: Tuple[float, float],
@@ -160,44 +180,13 @@ def calculate_distance(location1: Tuple[float, float],
     return theta * EARTH_RADIUS
 
 
-def get_distances_between(directory: Any, hospitals: List[Tuple[float, float]]):
-    """Returns the distance between each hospital and weather station in a tuple (hospital, weather station, distance)
-    """
-    my_list = []
-
-    for file in os.listdir(directory):
-        if file.endswith('.txt'):
-            path = directory + '/' + file
-            with open(path, 'r') as new:
-                file_data = new.readlines()
-                listed_data = [x.split() for x in file_data]
-
-            location = get_location(listed_data)
-
-    return my_list
-
-
-def sort_hospitals(hospitals: Any):
-    """Sorts hospitals with their name and location in a tuple of latitude and longitude
-
-    Preconditions:
-        - len([x for x in hosp['Location']]) == len([x for x in hosp['Trust Code']])
-    """
-    # List accumulator that collects tuples of names and locations of individual hospitals
-    my_list = []
-
-    hosp = pd.read_csv(hospitals)
-    locations = [transform_string_coords(x) for x in hosp['Location']]
-    names = [x for x in hosp['Trust Code']]
-
-    for i in range(len(locations)):
-        my_list.append((names[i], locations[i]))
-
-    return my_list
-
-
 def transform_string_coords(coords: str) -> Tuple[float, float]:
     """Returns the Tuple[float, float] version of the coordinates that were in a string.
+
+
+    Preconditions:
+        - The format of the string coords must be in the following: '(x, y)'. There must be a space inbetween the
+        variables.
  -
     >>> transform_string_coords('(15.235, -56.1265)')
     (15.235, -56.1265)
@@ -212,33 +201,11 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
 
 
 def check_space(string: str):
-    """Return if there is a space after a comma. """
+    """Return if there is a space after a comma. This is a helper function to check if the dataset in question
+    has proper formatting of string coords."""
 
     for i in range(len(string)):
         if string[i] == ',':
             return string[i+1] == ' '
 
-
-def close(hospitals: Any, directory: Any) -> dict:
-    """Returns a dictionary with keys being weather stations and the values being the hospitals that are closest to the
-    weather station"""
-
-    # Dictionary accumulator that has keys of weather location names and values of closest hospitals
-    my_dict = {}
-
-    sorted_hospitals = sort_hospitals(hospitals)
-    sorted_stations = sort_weather_stations(directory)
-
-    for hospital in sorted_hospitals:
-        min_distance = min([calculate_distance(sorted_stations[x], hospital[1]) for x in sorted_stations])
-
-        for x in sorted_stations:
-            if calculate_distance(sorted_stations[x], hospital[1]) == min_distance:
-                if x in my_dict:
-                    my_dict[x].append(hospital[0])
-
-                else:
-                    my_dict[x] = [hospital[0]]
-
-    return my_dict
 
