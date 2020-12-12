@@ -227,22 +227,18 @@ def close(hospitals: Any, directory: Any) -> dict:
     my_dict = {}
 
     sorted_hospitals = sort_hospitals(hospitals)
+    sorted_stations = sort_weather_stations(directory)
 
-    for file in os.listdir(directory):
-        if file.endswith('.txt'):
-            path = directory + '/' + file
-            with open(path, 'r') as new:
-                file_data = new.readlines()
-                listed_data = [x.split() for x in file_data]
+    for hospital in sorted_hospitals:
+        min_distance = min([calculate_distance(sorted_stations[x], hospital[1]) for x in sorted_stations])
 
-            location = get_location(listed_data)
-            current_name = listed_data[0][0]
+        for x in sorted_stations:
+            if calculate_distance(sorted_stations[x], hospital[1]) == min_distance:
+                if x in my_dict:
+                    my_dict[x].append(hospital[0])
 
-            yur = [(x[0], calculate_distance(x[1], location)) for x in sorted_hospitals]
-
-            # We're setting a radius of 50km as a benchmark for relative closeness.
-            for x in yur:
-                if x[1] < 50:
-                    my_dict[current_name] = x[0]
+                else:
+                    my_dict[x] = [hospital[0]]
 
     return my_dict
+
