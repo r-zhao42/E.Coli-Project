@@ -34,7 +34,7 @@ EARTH_RADIUS = 6373.0  # km
 gf = pd.read_csv(hospital_data_with_locations)
 
 
-def find_closest_weather_stations(hospitals: Any, directory: Any) -> dict:
+def find_closest_weather_stations(hospitals: Any, directory: Any) -> Dict[str, List[str]]:
     """Returns a dictionary with keys being weather stations and the values being the hospitals that are closest to the
     weather station"""
 
@@ -58,6 +58,7 @@ def find_closest_weather_stations(hospitals: Any, directory: Any) -> dict:
     return my_dict
 
 
+# ------------------------------------------HELPER FUNCTIONS-----------------------------------------------------------
 def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
     """Returns all the weather stations in the directory, sorted in a dictionary. The keys are the names
     of the weather stations and the values are their locations."""
@@ -77,7 +78,7 @@ def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
     return my_dict
 
 
-def sort_hospitals(hospitals: Any):
+def sort_hospitals(hospitals: Any) -> List[Tuple[str, Tuple[float, float]]]:
     """Sorts hospitals with their name and location in a tuple of latitude and longitude
 
     Preconditions:
@@ -103,9 +104,8 @@ with open(example_txt_file, 'r') as fl:
     listed_example_file = [x.split() for x in data]
 
 
-# A helper function for the
 def get_monthly_average(year: int, month: int, my_data: list) -> float:
-    """Returns the average from min_temp and max_temp of the given data set
+    """Returns the average from min_temp and max_temp of the given data set from a specified year and month.
 
     Preconditions:
         - self.year >= 1978
@@ -160,15 +160,7 @@ def calculate_distance(location1: Tuple[float, float],
                        location2: Tuple[float, float]) -> float:
     """Return the distance between location1 and location 2 given in (latitude, longitude) pairs.
 
-    We illustrate using *spherical* distance rather than Euclidean (2-D) distance.
-    It doesn't make a difference in our case because the points are very close together,
-    but we wanted to illustrate yet another example of implementing a mathematical
-    formula in Python!
-
-    Further reading: https://en.wikipedia.org/wiki/Great-circle_distance
-
-    NOTE: the locations are in degrees, but the math module functions expect radians.
-    Use math.radians to convert from degrees to radians before computing the given formula.
+    This function was reused from Tutorial Week 12!
     """
 
     delta_lat = math.radians(abs(location1[0] - location2[0]))
@@ -185,8 +177,10 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
 
 
     Preconditions:
-        - The format of the string coords must be in the following: '(x, y)'. There must be a space inbetween the
-        variables.
+        - type(coords) == str
+
+    The format of the string coords must be in the following: '(x, y)'. There must be a space inbetween the
+    variables.
  -
     >>> transform_string_coords('(15.235, -56.1265)')
     (15.235, -56.1265)
@@ -200,12 +194,37 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
     return float(splits[0]), float(splits[-1])
 
 
-def check_space(string: str):
+def check_space(string: str) -> bool:
     """Return if there is a space after a comma. This is a helper function to check if the dataset in question
-    has proper formatting of string coords."""
+    has proper formatting of string coords.
+
+    Usage:
+    >>> check_space('(52.123, -455.256)')
+    True
+    >>> check_space('(18.295,-97.356)')
+    False
+
+    """
 
     for i in range(len(string)):
         if string[i] == ',':
             return string[i+1] == ' '
 
+        else:
+            return False
 
+
+if __name__ == '__main__':
+    import python_ta
+    python_ta.check_all(config={
+        'extra-imports': ['python_ta.contracts'],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
+
+    import python_ta.contracts
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import pytest
+    pytest.main(['misc1.py'])
