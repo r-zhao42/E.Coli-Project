@@ -18,30 +18,14 @@ please consult our Course Syllabus.
 
 This file is Copyright (c) 2020 David Liu and Mario Badr.
 """
-import random
 from typing import Dict, Set, Any, Tuple, List
-import netCDF4 as nc
-import urllib.request
-import json
-import mysql.connector
-from datetime import date, datetime, timedelta
-import sys
-import codecs
-import csv
 import pandas as pd
-import lxml
-import html5lib
-from urllib.request import Request, urlopen
-import pprint
-import io
-import statistics
 import os
 import math
-import random
 
 # txt = 'C:/Users/Hayk/Desktop/yur2.txt'
-txt2 = 'C:/Users/Hayk/Desktop/Project/Temperature/lerwickdata.txt'
-txt3 = 'C:/Users/Hayk/Desktop/ecolilocations.csv'
+txt2 = 'Temperature Data/lerwickdata.txt'
+txt3 = 'Monthly E.Coli 2012-2020 with Location.csv'
 
 # df = pd.read_csv(txt, delimiter='\t', names=['yyyy'])
 gf = pd.read_csv(txt3)
@@ -110,7 +94,7 @@ def remove_chars(string: str) -> str:
         return string
 
 
-my_directory = 'C:/Users/Hayk/Desktop/Project/Temperature'
+my_directory = 'Temperature'
 
 
 def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
@@ -147,11 +131,6 @@ def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
 # br = pd.read_table(yum)
 
 # print(br)
-
-req = Request('https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/cambornedata.txt', headers={'User-Agent': 'Mozilla/5.0'})
-webpage = urlopen(req).read()
-
-uhuh = webpage.decode()
 
 EARTH_RADIUS = 6373.0  # km
 COURIER_SPEED = 20  # km/h
