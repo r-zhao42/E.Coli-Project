@@ -1,5 +1,6 @@
 import pandas as pd
 import math
+from typing import List
 import datetime
 
 ECOLI_DATA = pd.read_csv('Monthly E.Coli 2012-2020.csv')
@@ -52,6 +53,33 @@ def get_total_month(year: int, month: int):
     date = datetime.date(year=year, month=month, day=1)
     date = get_str_date(date)
     return ECOLI_DATA[date].sum()
+
+def infections_by_code(code: str) -> pd.DataFrame:
+    """Returns a panda dataframe containing all the infection data for the
+    hospital specified by the code"""
+    tp = ECOLI_DATA.transpose()
+    new_header = tp.iloc[0]
+    tp.columns = new_header
+    return tp[code]
+
+def infections_by_codes(codes: List[str]) -> pd.DataFrame:
+    """Return a data set containing infections for all the hospitals specified
+    in the codes"""
+    dfs = []
+    for code in codes:
+        dfs.append(infections_by_code(code))
+    result = dfs[0]
+    for i in range(len(dfs) - 1):
+        result = pd.merge(result, dfs[i + 1], right_index=True, left_index=True)
+    return result
+
+def total_infections_by_codes(codes: List[str]) -> pd.Series:
+    """Returns a series of the total infections in the hospitals specified
+    in codes"""
+    df = infections_by_codes(codes)
+    result = df.sum(axis=1)
+    result = result.drop('Trust Code')
+    return result
 
 def get_str_date(date: datetime.date) -> str:
     return date.strftime("20%y-%m-%d")
