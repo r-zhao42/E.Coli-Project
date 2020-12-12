@@ -94,7 +94,7 @@ def remove_chars(string: str) -> str:
         return string
 
 
-my_directory = 'Temperature'
+my_directory = 'Temperature Data'
 
 
 def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
@@ -183,6 +183,7 @@ def sort_hospitals(hospitals: Any):
     Preconditions:
         - len([x for x in hosp['Location']]) == len([x for x in hosp['Trust Code']])
     """
+    # List accumulator that collects tuples of names and locations of individual hospitals
     my_list = []
 
     hosp = pd.read_csv(hospitals)
@@ -210,7 +211,6 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
     return float(splits[0]), float(splits[-1])
 
 
-
 def check_space(string: str):
     """Return if there is a space after a comma. """
 
@@ -218,3 +218,31 @@ def check_space(string: str):
         if string[i] == ',':
             return string[i+1] == ' '
 
+
+def close(hospitals: Any, directory: Any) -> dict:
+    """Returns a dictionary with keys being weather stations and the values being the hospitals that are closest to the
+    weather station"""
+
+    # Dictionary accumulator that has keys of weather location names and values of closest hospitals
+    my_dict = {}
+
+    sorted_hospitals = sort_hospitals(hospitals)
+
+    for file in os.listdir(directory):
+        if file.endswith('.txt'):
+            path = directory + '/' + file
+            with open(path, 'r') as new:
+                file_data = new.readlines()
+                listed_data = [x.split() for x in file_data]
+
+            location = get_location(listed_data)
+            current_name = listed_data[0][0]
+
+            yur = [(x[0], calculate_distance(x[1], location)) for x in sorted_hospitals]
+
+            # We're setting a radius of 50km as a benchmark for relative closeness.
+            for x in yur:
+                if x[1] < 50:
+                    my_dict[current_name] = x[0]
+
+    return my_dict
