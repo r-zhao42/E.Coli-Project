@@ -1,0 +1,4 @@
+install:
+-pandas
+-OS
+-scikit-learn
