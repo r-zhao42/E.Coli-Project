@@ -92,7 +92,7 @@ data = [['1930', '12', '7.0', '3.6', '0', '122.4', '13.1'],
  ['1938', '3', '8.2', '3.7', '2', '101.3', '59.3']]
 
 # Replaced
-with open('lerwickdata.txt', 'r') as txt:
+with open('Temperature Data/lerwickdata.txt', 'r') as txt:
     data = txt.readlines()
     data = [x.split() for x in data]
 
