@@ -1,4 +1,5 @@
 install:
 -pandas
 -OS
+-plotly
 -scikit-learn
