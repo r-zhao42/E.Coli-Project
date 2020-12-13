@@ -81,6 +81,8 @@ def total_infections_by_codes(codes: List[str]) -> pd.Series:
     """Returns a series of the total infections in the hospitals specified
     in codes"""
     df = infections_by_codes(codes)
+    if type(df) == pd.Series:
+        df = df.to_frame()
     result = df.sum(axis=1)
     result = result.drop('Trust Code')
     return result

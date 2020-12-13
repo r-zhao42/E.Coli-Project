@@ -89,14 +89,47 @@ def get_model_station(station: str):
 ========== PROFIT ==========
 """
 
-years_to_predict = [2020, 2100, 2500, 10000]
 
-models = get_model_station('Aberporth')
 
-for year in years_to_predict:
-    temperature_prediction = models[0].predict([[year]])[0]
-    ecoli_prediction = models[1].predict([[temperature_prediction]])
-    print("ecoli prediction for {}: {}".format(year, ecoli_prediction))
+def get_data_station(station: str, start: int, end: int):
+    years_to_predict = [year for year in range(start, end + 1)]
+    model = get_model_station(station)
+    df = pd.DataFrame(columns=list('AB'))
+
+    time_temp_model = model[0]
+    temp_ecoli_model = model[1]
+
+    for year in years_to_predict:
+        temperature_prediction = time_temp_model.predict([[year]])[0]
+        ecoli_prediction = temp_ecoli_model.predict([[temperature_prediction]])
+        df2 = pd.DataFrame([[year, ecoli_prediction]], columns=list('AB'))
+        df = df.append(df2)
+    return df
+
+
+def get_total_data(start: int, end: int):
+    dfs = []
+    for station in weather_stations:
+        dfs.append(get_data_station(station, start, end))
+    df = dfs[0]
+    for i in range(len(dfs) - 1):
+        df = df.merge(dfs[i+1], on='A')
+    sums = df.sum(axis=1)
+    result = pd.DataFrame({'years': df['A']})
+    result = result.assign(ecoli=sums)
+    return result
+
+
+data = get_total_data(2020, 2030)
+
+
+
+# models = get_model_station('Aberporth')
+#
+# for year in years_to_predict:
+#     temperature_prediction = models[0].predict([[year]])[0]
+#     ecoli_prediction = models[1].predict([[temperature_prediction]])
+#     print("ecoli prediction for {}: {}".format(year, ecoli_prediction))
 
 
 
