@@ -1,5 +1,13 @@
-install:
--pandas
--OS
--plotly
+# E.Coli Project: Python libraries we will be using in our project.
+
+# Machine Learning and Porjections:
 -scikit-learn
+
+
+# Reading and formatting files:
+-pandas
+-os
+
+
+# Graphics and data visualiztion:
+-plotly

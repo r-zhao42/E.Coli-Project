@@ -23,6 +23,8 @@ import pandas as pd
 import os
 import math
 
+# Copyright: Hayk Nazaryan
+
 # Variables containing the paths for the files and directories. Can be used for testing.
 example_txt_file = 'Temperature Data/lerwickdata.txt'
 hospital_data_with_locations = 'Monthly E.Coli 2012-2020 with Location.csv'
@@ -108,8 +110,8 @@ def get_monthly_average(year: int, month: int, my_data: list) -> float:
     """Returns the average from min_temp and max_temp of the given data set from a specified year and month.
 
     Preconditions:
-        - self.year >= 1978
-        - 1 <= self.month <= 12
+        - year >= 1978
+        - 1 <= month <= 12
     """
 
     for x in my_data[1:]:
@@ -160,7 +162,6 @@ def calculate_distance(location1: Tuple[float, float],
                        location2: Tuple[float, float]) -> float:
     """Return the distance between location1 and location 2 given in (latitude, longitude) pairs.
 
-    This function was reused from Tutorial Week 12!
     """
 
     delta_lat = math.radians(abs(location1[0] - location2[0]))

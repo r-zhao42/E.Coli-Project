@@ -118,5 +118,5 @@ model = linear_model.LinearRegression()
 
 model.fit(x, y)
 
-print(model.predict([[2020]]))
-print(model.predict([[2050]]))
+print(type(model.predict([[2010]])))
+print(type(model.predict([[2050]])))
