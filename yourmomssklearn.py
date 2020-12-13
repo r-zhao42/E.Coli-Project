@@ -11,26 +11,26 @@ from sklearn import linear_model
 ========== MODEL: TIME => TEMPERATURE ==========
 """
 
-with open('Temperature Data/aberporthdata.txt', 'r') as txt:
-    temperature_data = txt.readlines()
-    temperature_data = [entry.split() for entry in temperature_data]
-    temperature_data = temperature_data[7:]
-
-time_x = []
-temperature_y = []
-
-for entry in temperature_data:
-    if entry[2] != '---' and entry[3] != '---':
-        year = float(entry[0])
-        month = float(entry[1])
-        time = year + (month - 1) / 12
-        mean_temperature = (float(entry[2]) + float(entry[3])) / 2
-        time_x.append([time])
-        temperature_y.append(mean_temperature)
-
-time_x, temperature_y = numpy.array(time_x), numpy.array(temperature_y)
-time_to_temperature_model = linear_model.LinearRegression()
-time_to_temperature_model.fit(time_x, temperature_y)
+# with open('Temperature Data/aberporthdata.txt', 'r') as txt:
+#     temperature_data = txt.readlines()
+#     temperature_data = [entry.split() for entry in temperature_data]
+#     temperature_data = temperature_data[7:]
+#
+# time_x = []
+# temperature_y = []
+#
+# for entry in temperature_data:
+#     if entry[2] != '---' and entry[3] != '---':
+#         year = float(entry[0])
+#         month = float(entry[1])
+#         time = year + (month - 1) / 12
+#         mean_temperature = (float(entry[2]) + float(entry[3])) / 2
+#         time_x.append([time])
+#         temperature_y.append(mean_temperature)
+#
+# time_x, temperature_y = numpy.array(time_x), numpy.array(temperature_y)
+# time_to_temperature_model = linear_model.LinearRegression()
+# time_to_temperature_model.fit(time_x, temperature_y)
 
 """
 ========== MODEL: TEMPERATURE => ECOLI ==========
@@ -44,17 +44,36 @@ weather_stations = find_closest_weather_stations(ecoli_file_name, temperature_di
 
 def get_model_station(station: str):
     """Does cool shit"""
+    path = station + 'data.txt'
+    with open('Temperature Data/' + path, 'r') as txt:
+        temperature_data = txt.readlines()
+        temperature_data = [entry.split() for entry in temperature_data]
+        temperature_data = temperature_data[7:]
+
+    if len(temperature_data[-1]) <= 2:
+        temperature_data.pop()
+    for entry in temperature_data:
+        try:
+            float(entry[0])
+        except ValueError:
+            temperature_data.remove(entry)
+        if entry[2][-1] == "*":
+            entry[2] = entry[2][:-1]
+        if entry[3][-1] == "*":
+            entry[3] = entry[3][:-1]
+
+
     ecoli = total_infections_by_codes(weather_stations[station]).to_frame()
     ecoli_time = ecoli.index.tolist()
     ecoli_time = [time[:7] for time in ecoli_time]
     ecoli_value = ecoli.values.tolist()
-
     temperature_x = []
     ecoli_y = []
-
     for entry in temperature_data:
         year = entry[0]
         month = entry[1]
+        if len(month) == 1:
+            month = '0' + month
         time = "{}-{}".format(year, month)
         if time in ecoli_time:
             mean_temperature = (float(entry[2]) + float(entry[3])) / 2
@@ -65,6 +84,8 @@ def get_model_station(station: str):
 
     temperature_x, ecoli_y = numpy.array(temperature_x), numpy.array(ecoli_y)
     temperature_to_ecoli_model = linear_model.LinearRegression()
+
+
     temperature_to_ecoli_model.fit(temperature_x, ecoli_y)
 
     time_x = []
@@ -78,6 +99,7 @@ def get_model_station(station: str):
             mean_temperature = (float(entry[2]) + float(entry[3])) / 2
             time_x.append([time])
             temperature_y.append(mean_temperature)
+
 
     time_x, temperature_y = numpy.array(time_x), numpy.array(temperature_y)
     time_to_temperature_model = linear_model.LinearRegression()

@@ -66,7 +66,6 @@ def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
     of the weather stations and the values are their locations."""
 
     my_dict = {}
-
     for file in os.listdir(directory):
         if file.endswith('.txt'):
             path = directory + '/' + file
@@ -75,7 +74,8 @@ def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
                 listed_data = [x.split() for x in file_data]
 
             location = get_location(listed_data)
-            my_dict[listed_data[0][0]] = location
+            key = file.split('.')[0][:-4]
+            my_dict[key] = location
 
     return my_dict
 
