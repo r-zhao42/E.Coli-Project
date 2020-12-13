@@ -11,3 +11,4 @@
 
 # Graphics and data visualiztion:
 -plotly
+-xlrd 1.2.0 or 1.2.1
