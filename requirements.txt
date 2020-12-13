@@ -1,17 +1,17 @@
 # E.Coli Project: Python libraries we will be using in our project.
 
 # Machine Learning and Porjections:
--scikit-learn
+-scikit-learn (0.23.2)
 
 
 # Reading and formatting files:
--pandas
--os
+-pandas (1.1.5)
+-os 
 
 
 # Graphics and data visualiztion:
--plotly
--xlrd 1.2.0 or 1.2.1
+-plotly (4.14.0)
+-xlrd (1.2.0 or 1.2.1)
 
 # Testing:
-- python-ta 1.6.2b1
+- python-ta (1.6.2b1)

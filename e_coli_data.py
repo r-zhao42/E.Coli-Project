@@ -87,6 +87,7 @@ def total_infections_by_codes(codes: List[str]) -> pd.Series:
     result = result.drop('Trust Code')
     return result
 
+
 def get_str_date(date: datetime.date) -> str:
     """Turns a datetime.date object into a string with form yyyy-mm-dd"""
     return date.strftime("20%y-%m-%d")
