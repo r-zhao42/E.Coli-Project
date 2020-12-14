@@ -10,8 +10,10 @@ from e_coli_data import total_infections_by_codes
 import location_data
 import e_coli_data
 
-sys.setrecursionlimit(10**6)
 
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
+
+sys.setrecursionlimit(10**6)
 
 ECOLI_FILE = 'Monthly E.Coli 2012-2020 with Location.csv'
 TEMPERATURE_DIR = 'Temperature Data'

@@ -4,6 +4,7 @@ from typing import List
 import datetime
 import pandas as pd
 
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
 
 sys.setrecursionlimit(10 ** 6)
 ECOLI_DATA = pd.read_csv('Monthly E.Coli 2012-2020.csv')

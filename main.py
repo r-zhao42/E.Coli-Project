@@ -8,6 +8,8 @@ from plotly_map import plot_map
 HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
 WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
 
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
+
 
 def run_all_stations(end_year: int) -> None:
     """This function is responsible for running the entirety our project:
@@ -35,7 +37,8 @@ def run_individual_station(name: str, start_year: int, end_year: int) -> None:
     identifier = name.lower().replace(' ', '').replace('-', '')
     projections = projection.get_data_station(identifier, start_year, end_year)
 
-    data = location_data.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS, WEATHER_STATIONS_DIRECTORY)
+    data = location_data.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS,
+                                                       WEATHER_STATIONS_DIRECTORY)
 
     history = ECOLI_DATA.total_infections_by_codes(data[identifier])
     history_frame = history.to_frame().reset_index()

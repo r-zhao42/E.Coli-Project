@@ -1,4 +1,4 @@
-# E.Coli Project: Python libraries we will be using in our project.
+# E.Coli Project: Python libraries we will be using in our project. Firstly, please ensure that you are using Python version 3.8
 
 # Machine Learning and Porjections:
 -scikit-learn (0.23.2)
