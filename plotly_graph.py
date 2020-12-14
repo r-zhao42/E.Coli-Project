@@ -9,8 +9,10 @@ df = yourmomssklearn.get_total_data(2010, 2030)
 df2 = pd.read_excel('totals.xlsx')
 name = 'UK E.coli vs. Temperature'
 
+df['years'] = df['years'].map(lambda year: "{}-01-01".format(year))
 
-
+print(df)
+print(df2)
 
 fig = go.Figure()
 
@@ -28,11 +30,11 @@ fig.add_trace(go.Scatter(x=df['years'], y=df['ecoli'],
 
 fig.add_trace(go.Scatter(x=df2['x'], y=df2['y'],
                          name='Projected E.coli data',
-                         mode='lines + markers',
-                         marker=dict(
-                             size=10,
-                             color=df2['y'],  # set color equal to a variable
-                             showscale=True)))
+                         mode='lines + markers'))
+                        #  marker=dict(
+                        #      size=10,
+                        #      color=df2['y'],  # set color equal to a variable
+                        #      showscale=True)))
 
 fig.update_layout(title={
     'text': name,
