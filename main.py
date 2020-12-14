@@ -1,9 +1,7 @@
 import e_coli_data as ECOLI_DATA
 import yourmomssklearn
-import plotly
 import misc1
 from plotly_graph import plot_your_mom, yourmomsweatherstation
-import pandas as pd
 from plotly_map import plot_map
 
 HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
@@ -11,11 +9,12 @@ WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
 
 
 def run_all_weather_stations() -> None:
-    """This function is responsible for running our project:
+    """This function is responsible for running the entirety our project:
 
-    It should first run a modelled graph
+    It should first run a modelled graph of the all the UK E.Coli infections
 
-    And second, an overlayed data on an image of a map.
+    And second, overlay of data on a map using MapBox. The data is the percent of
+    increase of E.Coli cases from 2020 until 2100.
 
     """
 
@@ -24,7 +23,12 @@ def run_all_weather_stations() -> None:
 
 
 def run_individual_weather_station(name: str, start_year: int, end_year: int) -> None:
-    """Returns the individual plotly graph of individual weather stations."""
+    """Returns the individual plotly graph of individual weather stations.
+
+    Usage:
+    >>> run_individual_weather_station('waddington', 2010, 2100)
+
+    """
 
     projection = yourmomssklearn.get_data_station(name, start_year, end_year)
 
@@ -42,4 +46,3 @@ def run_individual_weather_station(name: str, start_year: int, end_year: int) ->
 
 if __name__ == '__main__':
     print('This is main')
-    run_individual_weather_station('aberporth', 2010, 2100)
