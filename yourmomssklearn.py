@@ -140,7 +140,7 @@ def get_data_all_stations(start: int, end: int) -> Dict[str, pd.DataFrame]:
 def get_percentage_increase_all_stations(start: int, end: int):
     projection = get_data_all_stations(start, end)
     station_codes = misc1.find_closest_weather_stations(misc1.hospital_data_with_locations, misc1.weather_stations_directory)
-
+    result_so_far = {}
     for station in projection:
         print(station)
         past_data = e_coli_data.total_infections_by_codes(station_codes[station])
@@ -151,8 +151,22 @@ def get_percentage_increase_all_stations(start: int, end: int):
         print(df)
         for i in range(len(df.index)):
             df.iat[i, 1] = ((df.iat[i, 1] / average) - 1) * 100
-        print(df)
-    return projection
+        result_so_far[station] = df
+    return result_so_far
+
+
+def get_total_data1(start: int, end: int):
+    dfs = []
+    for station in weather_stations:
+        dfs.append(get_data_station(station, start, end))
+    df = dfs[0]
+    # for i in range(len(dfs) - 1):
+    #     df = df.merge(dfs[i+1], on='A')
+    # sums = df.sum(axis=1)
+    # result = pd.DataFrame({'years': df['A']})
+    # result = result.assign(ecoli=sums)
+    # return result
+    return dfs
 
 
 def get_total_data(start: int, end: int):
@@ -162,13 +176,24 @@ def get_total_data(start: int, end: int):
     df = dfs[0]
     for i in range(len(dfs) - 1):
         df = df.merge(dfs[i+1], on='A')
-    sums = df.sum(axis=1)
+    sums = df.iloc[:, 1:].sum(axis=1)
+    print(sums)
     result = pd.DataFrame({'years': df['A']})
     result = result.assign(ecoli=sums)
     return result
 
 
-data = get_percentage_increase_all_stations(2020, 2030)
+first_values = []
+data = get_total_data1(2020, 2030)
+for df in data:
+    first_values.append(df.iat[0,1])
+test = get_total_data(2020, 2030).iat[0,1]
+sum = sum(first_values)
+
+
+
+
+#data = get_percentage_increase_all_stations(2020, 2030)
 # data1 = get_data_station('aberporth', 2020, 2050)
 # data = get_total_data(2020, 2100)
 
