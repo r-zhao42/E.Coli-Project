@@ -138,8 +138,8 @@ def get_percentage_increase(end_year: int) -> Dict[str, float]:
     """Returns a dictionary matching the string of a station name to a float
      representing the percentage increase in average monthly E.Coli incidence at end_year"""
     projection = get_data_all_stations(2020, end_year)
-    hospital_data = misc1.hospital_data_with_locations
-    weather_data = misc1.weather_stations_directory
+    hospital_data = misc1.HOSPITAL_DATA_WITH_LOCATIONS
+    weather_data = misc1.WEATHER_STATIONS_DIRECTORY
     station_codes = misc1.find_closest_weather_stations(hospital_data, weather_data)
     result_so_far = {}
     for station in projection:

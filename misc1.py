@@ -27,14 +27,15 @@ import pandas as pd
 # Copyright: Hayk Nazaryan
 
 # Variables containing the paths for the files and directories. Can be used for testing.
-example_txt_file = 'Temperature Data/lerwickdata.txt'
-hospital_data_with_locations = 'Monthly E.Coli 2012-2020 with Location.csv'
-weather_stations_directory = 'Temperature Data'
+EXAMPLE_TXT_FILE = 'Temperature Data/lerwickdata.txt'
+HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
+WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
+
 
 EARTH_RADIUS = 6373.0  # km
 
 # Using pandas to read the hospital data with locations csv file.
-gf = pd.read_csv(hospital_data_with_locations)
+GF = pd.read_csv(HOSPITAL_DATA_WITH_LOCATIONS)
 
 
 def find_closest_weather_stations(hospitals: Any, directory: Any) -> Dict[str, List[str]]:
@@ -104,7 +105,7 @@ def sort_hospitals(hospitals: Any) -> List[Tuple[str, Tuple[float, float]]]:
 
 # Here we are opening an example .txt file and converting it into a list of lists,
 # where each line is a list.
-with open(example_txt_file, 'r') as fl:
+with open(EXAMPLE_TXT_FILE, 'r') as fl:
     data = fl.readlines()
 
     listed_example_file = [x.split() for x in data]
