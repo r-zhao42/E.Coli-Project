@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 
-def plot_your_mom() -> None:
+def plot_your_mom(end_year: int) -> None:
     """
     This plots the total UK E.Coli infection cases over time, past and future.
     It shows the relationship by the line of linear regression, which consequently also
@@ -15,10 +15,9 @@ def plot_your_mom() -> None:
 
 
     """
-    df = yourmomssklearn.get_total_data(2010, 2030)
+    df = yourmomssklearn.get_total_data(2010, end_year)
     df2 = pd.read_excel('totals.xlsx')
-    NAME_ = 'UK E.coli Projection Until 2100'
-
+    NAME_ = 'UK E.coli Projection Until {}'.format(end_year)
     df['years'] = df['years'].map("{}-01-01".format)
 
     fig = go.Figure()
