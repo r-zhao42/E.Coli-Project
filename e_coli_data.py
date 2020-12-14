@@ -1,7 +1,11 @@
-import pandas as pd
+"""DOCSTRING TODO"""
+import sys
 from typing import List
 import datetime
+import pandas as pd
 
+
+sys.setrecursionlimit(10 ** 6)
 ECOLI_DATA = pd.read_csv('Monthly E.Coli 2012-2020.csv')
 
 
@@ -44,7 +48,7 @@ def get_monthly_average(year: int) -> float:
     return get_total_year(year) / total_months
 
 
-def get_total_month(year: int, month: int):
+def get_total_month(year: int, month: int) -> int:
     """Get total number of cases in a given month
 
     Preconditions:
@@ -81,7 +85,7 @@ def total_infections_by_codes(codes: List[str]) -> pd.Series:
     """Returns a series of the total infections in the hospitals specified
     in codes"""
     df = infections_by_codes(codes)
-    if type(df) == pd.Series:
+    if df is pd.Series:
         df = df.to_frame()
     result = df.sum(axis=1)
     result = result.drop('Trust Code')
@@ -91,3 +95,25 @@ def total_infections_by_codes(codes: List[str]) -> pd.Series:
 def get_str_date(date: datetime.date) -> str:
     """Turns a datetime.date object into a string with form yyyy-mm-dd"""
     return date.strftime("20%y-%m-%d")
+
+
+if __name__ == '__main__':
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['python_ta.contracts', 'numpy', 'pandas',
+                          'misc1', 'e_coli_data', 'sklearn', 'sys', 'datetime',
+                          'typing'],
+        'allowed-io': ['get_model_station'],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
+
+    import python_ta.contracts
+
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import pytest
+
+    pytest.main(['e_coli_data.py'])
