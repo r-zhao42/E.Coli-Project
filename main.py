@@ -1,3 +1,4 @@
+from typing import Optional
 import e_coli_data as ECOLI_DATA
 import yourmomssklearn
 import misc1
@@ -8,7 +9,7 @@ HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
 WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
 
 
-def run_all_weather_stations() -> None:
+def run_all_stations(end_year: int) -> None:
     """This function is responsible for running the entirety our project:
 
     It should first run a modelled graph of the all the UK E.Coli infections
@@ -18,19 +19,19 @@ def run_all_weather_stations() -> None:
 
     """
 
-    plot_your_mom()
-    plot_map(2100)
+    plot_your_mom(end_year)
+    plot_map(end_year)
 
 
-def run_individual_weather_station(name: str, start_year: int, end_year: int) -> None:
+def run_individual_station(name: str, start_year: int, end_year: int) -> None:
     """Returns the individual plotly graph of individual weather stations.
 
     Usage:
-    >>> run_individual_weather_station('waddington', 2010, 2100)
+    >>> run_individual_station('waddington', 2010, 2100)
 
     """
-
-    projection = yourmomssklearn.get_data_station(name, start_year, end_year)
+    identifier = name.lower().replace(' ', '').replace('-', '')
+    projection = yourmomssklearn.get_data_station(identifier, start_year, end_year)
 
     data = misc1.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS, WEATHER_STATIONS_DIRECTORY)
 
@@ -44,5 +45,7 @@ def run_individual_weather_station(name: str, start_year: int, end_year: int) ->
     print(history_frame)
 
 
+
+
 if __name__ == '__main__':
-    print('This is main')
+    run_all_stations(2100)

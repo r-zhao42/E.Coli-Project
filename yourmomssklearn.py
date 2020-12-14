@@ -101,6 +101,37 @@ def time_temp_model(temperature_data: any) -> any:
     time_to_temperature_model.fit(time_x, temperature_y)
     return time_to_temperature_model
 
+def get_temp_prediction(station: str, end_year: int) -> float:
+    path = station + 'data.txt'
+    with open('Temperature Data/' + path, 'r') as txt:
+        temperature_data = txt.readlines()
+        temperature_data = [row.split() for row in temperature_data]
+        temperature_data = temperature_data[7:]
+
+    if len(temperature_data[-1]) <= 2:
+        temperature_data.pop()
+    for entry in temperature_data:
+        try:
+            float(entry[0])
+        except ValueError:
+            temperature_data.remove(entry)
+        if entry[2][-1] == "*":
+            entry[2] = entry[2][:-1]
+        if entry[3][-1] == "*":
+            entry[3] = entry[3][:-1]
+
+    time_temp = time_temp_model(temperature_data)
+    return time_temp.predict([[end_year]])
+
+def temp_prediction_all(end_year: int) -> pd.DataFrame:
+    temp_df = pd.DataFrame(columns=['location', 'temp'])
+    for station in WEATHER_STATIONS:
+        df2 = pd.DataFrame([[station, get_temp_prediction(station, end_year)]], columns=['location', 'temp'])
+        temp_df = temp_df.append(df2)
+    return temp_df
+
+
+
 
 def get_data_station(station: str, start_year: int, end_year: int) -> pd.DataFrame:
     """Returns a dataframe containing the projected average monthly E.Coli infections
@@ -171,22 +202,22 @@ def get_total_data(start_year: int, end_year: int) -> pd.DataFrame:
     return result
 
 
-if __name__ == '__main__':
-    import python_ta
-
-    python_ta.check_all(config={
-        'extra-imports': ['python_ta.contracts', 'numpy', 'pandas',
-                          'misc1', 'e_coli_data', 'sklearn', 'sys'],
-        'allowed-io': ['get_model_station'],
-        'max-line-length': 100,
-        'disable': ['R1705', 'C0200']
-    })
-
-    import python_ta.contracts
-
-    python_ta.contracts.DEBUG_CONTRACTS = False
-    python_ta.contracts.check_all_contracts()
-
-    import pytest
-
-    pytest.main(['yourmomssklearn.py'])
+# if __name__ == '__main__':
+#     import python_ta
+#
+#     python_ta.check_all(config={
+#         'extra-imports': ['python_ta.contracts', 'numpy', 'pandas',
+#                           'misc1', 'e_coli_data', 'sklearn', 'sys'],
+#         'allowed-io': ['get_model_station'],
+#         'max-line-length': 100,
+#         'disable': ['R1705', 'C0200']
+#     })
+#
+#     import python_ta.contracts
+#
+#     python_ta.contracts.DEBUG_CONTRACTS = False
+#     python_ta.contracts.check_all_contracts()
+#
+#     import pytest
+#
+#     pytest.main(['yourmomssklearn.py'])
