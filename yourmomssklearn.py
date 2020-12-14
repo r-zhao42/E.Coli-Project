@@ -3,7 +3,10 @@ import pandas as pd
 from pprint import pprint
 from misc1 import find_closest_weather_stations
 from e_coli_data import total_infections_by_codes
+import misc1
+import e_coli_data
 from sklearn import linear_model
+from typing import Dict
 
 # Only works for Aberporth rn, too lazy
 # Works for all stations now bb
@@ -62,7 +65,6 @@ def get_model_station(station: str):
         if entry[3][-1] == "*":
             entry[3] = entry[3][:-1]
 
-
     ecoli = total_infections_by_codes(weather_stations[station]).to_frame()
     ecoli_time = ecoli.index.tolist()
     ecoli_time = [time[:7] for time in ecoli_time]
@@ -84,7 +86,6 @@ def get_model_station(station: str):
 
     temperature_x, ecoli_y = numpy.array(temperature_x), numpy.array(ecoli_y)
     temperature_to_ecoli_model = linear_model.LinearRegression()
-
 
     temperature_to_ecoli_model.fit(temperature_x, ecoli_y)
 
@@ -129,6 +130,31 @@ def get_data_station(station: str, start: int, end: int):
     return df
 
 
+def get_data_all_stations(start: int, end: int) -> Dict[str, pd.DataFrame]:
+    result_so_far = {}
+    for station in weather_stations:
+        result_so_far[station] = get_data_station(station, start, end)
+    return result_so_far
+
+
+def get_percentage_increase_all_stations(start: int, end: int):
+    projection = get_data_all_stations(start, end)
+    station_codes = misc1.find_closest_weather_stations(misc1.hospital_data_with_locations, misc1.weather_stations_directory)
+
+    for station in projection:
+        print(station)
+        past_data = e_coli_data.total_infections_by_codes(station_codes[station])
+        total = past_data.sum(axis=0)
+        average = total / len(past_data.index)
+        df = projection[station]
+        print(past_data)
+        print(df)
+        for i in range(len(df.index)):
+            df.iat[i, 1] = ((df.iat[i, 1] / average) - 1) * 100
+        print(df)
+    return projection
+
+
 def get_total_data(start: int, end: int):
     dfs = []
     for station in weather_stations:
@@ -142,7 +168,10 @@ def get_total_data(start: int, end: int):
     return result
 
 
-data = get_total_data(2020, 2030)
+data = get_percentage_increase_all_stations(2020, 2030)
+# data1 = get_data_station('aberporth', 2020, 2050)
+# data = get_total_data(2020, 2100)
+
 
 
 
