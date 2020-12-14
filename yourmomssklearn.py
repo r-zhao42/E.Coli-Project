@@ -174,19 +174,16 @@ def get_total_data(start: int, end: int):
     for i in range(len(dfs) - 1):
         df = df.merge(dfs[i+1], on='A')
     sums = df.iloc[:, 1:].sum(axis=1)
-    print(sums)
-    result = pd.DataFrame({'years': df['A']})
-    result = result.assign(ecoli=sums)
+    sums.name = 'ecoli'
+    years = df.iloc[:, 0]
+    years.name = 'years'
+    result = pd.concat([years, sums], axis=1)
     return result
 
-#
-# first_values = []
-# data = get_total_data1(2020, 2030)
-# for df in data:
-#     first_values.append(df.iat[0,1])
-# test = get_total_data(2020, 2030).iat[0,1]
-# sum = sum(first_values)
 
+# first_values = []
+# data = get_total_data(2020, 2100)
+# print(data)
 
 
 
