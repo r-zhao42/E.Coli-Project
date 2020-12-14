@@ -1,8 +1,8 @@
 from typing import Optional
 import e_coli_data as ECOLI_DATA
-import yourmomssklearn
-import misc1
-from plotly_graph import plot_your_mom, yourmomsweatherstation
+import projection
+import location_data
+from plotly_graph import plot_graph, plot_individual
 from plotly_map import plot_map
 
 HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
@@ -21,7 +21,7 @@ def run_all_stations(end_year: int) -> None:
 
     """
 
-    plot_your_mom(end_year)
+    plot_graph(end_year)
     plot_map(end_year)
 
 
@@ -33,15 +33,15 @@ def run_individual_station(name: str, start_year: int, end_year: int) -> None:
 
     """
     identifier = name.lower().replace(' ', '').replace('-', '')
-    projection = yourmomssklearn.get_data_station(identifier, start_year, end_year)
+    projection = projection.get_data_station(identifier, start_year, end_year)
 
-    data = misc1.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS, WEATHER_STATIONS_DIRECTORY)
+    data = location_data.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS, WEATHER_STATIONS_DIRECTORY)
 
     history = ECOLI_DATA.total_infections_by_codes(data[name])
     history_frame = history.to_frame().reset_index()
     history_frame.columns = ['x', 'y']
 
-    yourmomsweatherstation(name, history_frame, projection)
+    plot_individual(name, history_frame, projection)
 
     print(projection)
     print(history_frame)

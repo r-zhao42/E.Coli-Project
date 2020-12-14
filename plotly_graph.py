@@ -2,12 +2,12 @@
 This python file generates the graph for past and projected E.Coli data in the UK.
 """
 
-import yourmomssklearn
+import projection
 import plotly.graph_objects as go
 import pandas as pd
 
 
-def plot_your_mom(end_year: int) -> None:
+def plot_graph(end_year: int) -> None:
     """
     This plots the total UK E.Coli infection cases over time, past and future.
     It shows the relationship by the line of linear regression, which consequently also
@@ -15,8 +15,8 @@ def plot_your_mom(end_year: int) -> None:
 
 
     """
-    df = yourmomssklearn.get_total_data(2010, end_year)
-    df2 = pd.read_excel('totals.xlsx')
+    df = projection.get_total_data(2010, end_year)
+    df2 = pd.read_excel('past_ecoli_totals.xlsx')
     NAME_ = 'UK E.coli Projection Until {}'.format(end_year)
     df['years'] = df['years'].map("{}-01-01".format)
 
@@ -50,7 +50,7 @@ def plot_your_mom(end_year: int) -> None:
     fig.show()
 
 
-def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.DataFrame) -> None:
+def plot_individual(name: str, history: pd.DataFrame, projection: pd.DataFrame) -> None:
     """
         Plots the individual graph for individual weather stations. Each weather station has a name which
         you enter in the name argument. History is derived from the E.Coli sorting file and the projection

@@ -4,7 +4,7 @@ increase percentage in E.Coli cases.
 """
 import plotly.graph_objects as go
 import pandas as pd
-import yourmomssklearn
+import projection
 
 
 def plot_map(end_year: int) -> None:
@@ -12,12 +12,12 @@ def plot_map(end_year: int) -> None:
     Plots a map showing the weather stations in the UK and their projected
     increase percentage in E.Coli cases.
     """
-    total = yourmomssklearn.get_percentage_increase(end_year)
+    total = projection.get_percentage_increase(end_year)
 
     mapbox_access_token = 'pk.eyJ1Ijoiam9qb29udGhhdCIsImEiOiJja2lta3Uzbnow' \
                           'YWRtMzVud3NrNjI3N2JjIn0.kYIFPU3HJbjDsNYyQFaGdA'
     df = pd.read_csv(
-        'jo.csv')
+        'plotly_map_station_locations.csv')
     site_lat = df.lat
     site_lon = df.lon
     locations_name = df.text.tolist()

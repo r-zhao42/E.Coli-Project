@@ -5,9 +5,9 @@ import sys
 import numpy
 import pandas as pd
 from sklearn import linear_model
-from misc1 import find_closest_weather_stations
+from location_data import find_closest_weather_stations
 from e_coli_data import total_infections_by_codes
-import misc1
+import location_data
 import e_coli_data
 
 sys.setrecursionlimit(10**6)
@@ -172,9 +172,9 @@ def get_percentage_increase(end_year: int) -> Dict[str, float]:
     """Returns a dictionary matching the string of a station name to a float
      representing the percentage increase in average monthly E.Coli incidence at end_year"""
     projection = get_data_all_stations(2020, end_year)
-    hospital_data = misc1.HOSPITAL_DATA_WITH_LOCATIONS
-    weather_data = misc1.WEATHER_STATIONS_DIRECTORY
-    station_codes = misc1.find_closest_weather_stations(hospital_data, weather_data)
+    hospital_data = location_data.HOSPITAL_DATA_WITH_LOCATIONS
+    weather_data = location_data.WEATHER_STATIONS_DIRECTORY
+    station_codes = location_data.find_closest_weather_stations(hospital_data, weather_data)
     result_so_far = {}
     for station in projection:
         past_data = e_coli_data.total_infections_by_codes(station_codes[station])
@@ -223,4 +223,4 @@ def get_total_data(start_year: int, end_year: int) -> pd.DataFrame:
 #
 #     import pytest
 #
-#     pytest.main(['yourmomssklearn.py'])
+#     pytest.main(['projection.py'])
