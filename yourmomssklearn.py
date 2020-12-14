@@ -179,13 +179,13 @@ def get_total_data(start: int, end: int):
     result = result.assign(ecoli=sums)
     return result
 
-
-first_values = []
-data = get_total_data1(2020, 2030)
-for df in data:
-    first_values.append(df.iat[0,1])
-test = get_total_data(2020, 2030).iat[0,1]
-sum = sum(first_values)
+#
+# first_values = []
+# data = get_total_data1(2020, 2030)
+# for df in data:
+#     first_values.append(df.iat[0,1])
+# test = get_total_data(2020, 2030).iat[0,1]
+# sum = sum(first_values)
 
 
 
