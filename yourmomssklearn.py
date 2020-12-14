@@ -148,7 +148,8 @@ def get_percentage_increase_all_stations(start: int, end: int):
         df = projection[station]
         for i in range(len(df.index)):
             df.iat[i, 1] = ((df.iat[i, 1] / average) - 1) * 100
-        result_so_far[station] = df
+        result_so_far[station] = float(df.iloc[-1, -1])
+
     return result_so_far
 
 
