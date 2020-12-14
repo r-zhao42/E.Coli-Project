@@ -5,8 +5,9 @@ from misc1 import find_closest_weather_stations
 from e_coli_data import total_infections_by_codes
 import misc1
 import e_coli_data
+import sklearn
 from sklearn import linear_model
-from typing import Dict
+from typing import Dict, Tuple
 
 # Only works for Aberporth rn, too lazy
 # Works for all stations now bb
@@ -45,8 +46,12 @@ temperature_dir = 'Temperature Data'
 weather_stations = find_closest_weather_stations(ecoli_file_name, temperature_dir)
 
 
-def get_model_station(station: str):
-    """Does cool shit"""
+def get_model_station(station: str) -> tuple:
+    """Take a station name and returns a tuple containing a time-temperature and temperature-E.Coli model.
+
+    Preconditions:
+        - station in weather_stations
+    """
     path = station + 'data.txt'
     with open('Temperature Data/' + path, 'r') as txt:
         temperature_data = txt.readlines()
@@ -101,21 +106,26 @@ def get_model_station(station: str):
             time_x.append([time])
             temperature_y.append(mean_temperature)
 
-
     time_x, temperature_y = numpy.array(time_x), numpy.array(temperature_y)
     time_to_temperature_model = linear_model.LinearRegression()
     time_to_temperature_model.fit(time_x, temperature_y)
 
     return (time_to_temperature_model, temperature_to_ecoli_model)
 
+
 """
 ========== PROFIT ==========
 """
 
 
+def get_data_station(station: str, start_year: int, end_year: int) -> pd.DataFrame:
+    """Returns a dataframe containing the projected average monthly E.Coli infections
+    from the start_year to the end_year
 
-def get_data_station(station: str, start: int, end: int):
-    years_to_predict = [year for year in range(start, end + 1)]
+    Preconditions:
+        - stations in weather_stations
+    """
+    years_to_predict = [year for year in range(start_year, end_year + 1)]
     model = get_model_station(station)
     df = pd.DataFrame(columns=list('AB'))
 
@@ -130,15 +140,21 @@ def get_data_station(station: str, start: int, end: int):
     return df
 
 
-def get_data_all_stations(start: int, end: int) -> Dict[str, pd.DataFrame]:
+def get_data_all_stations(start_year: int, end_year: int) -> Dict[str, pd.DataFrame]:
+    """Returns a dictionary that matches the string of the station name to a dataframe
+    containing the projected average monthly E.Coli infections between start_year
+    and end_year
+    """
     result_so_far = {}
     for station in weather_stations:
-        result_so_far[station] = get_data_station(station, start, end)
+        result_so_far[station] = get_data_station(station, start_year, end_year)
     return result_so_far
 
 
-def get_percentage_increase_all_stations(start: int, end: int):
-    projection = get_data_all_stations(start, end)
+def get_percentage_increase_all_stations(end_year: int) -> Dict[str, float]:
+    """Returns a dictionary matching the string of a station name to a float
+     representing the percentage increase in average monthly E.Coli incidence at end_year"""
+    projection = get_data_all_stations(2020, end_year)
     station_codes = misc1.find_closest_weather_stations(misc1.hospital_data_with_locations, misc1.weather_stations_directory)
     result_so_far = {}
     for station in projection:
@@ -153,24 +169,12 @@ def get_percentage_increase_all_stations(start: int, end: int):
     return result_so_far
 
 
-def get_total_data1(start: int, end: int):
+def get_total_data(start_year: int, end_year: int) -> pd.DataFrame:
+    """Returns a dataframe containing the projected years and average monthly E.Coli infections
+    in that year between the start_year and end_year"""
     dfs = []
     for station in weather_stations:
-        dfs.append(get_data_station(station, start, end))
-    df = dfs[0]
-    # for i in range(len(dfs) - 1):
-    #     df = df.merge(dfs[i+1], on='A')
-    # sums = df.sum(axis=1)
-    # result = pd.DataFrame({'years': df['A']})
-    # result = result.assign(ecoli=sums)
-    # return result
-    return dfs
-
-
-def get_total_data(start: int, end: int):
-    dfs = []
-    for station in weather_stations:
-        dfs.append(get_data_station(station, start, end))
+        dfs.append(get_data_station(station, start_year, end_year))
     df = dfs[0]
     for i in range(len(dfs) - 1):
         df = df.merge(dfs[i+1], on='A')
@@ -180,28 +184,3 @@ def get_total_data(start: int, end: int):
     years.name = 'years'
     result = pd.concat([years, sums], axis=1)
     return result
-
-
-# first_values = []
-# data = get_total_data(2020, 2100)
-# print(data)
-
-
-
-#data = get_percentage_increase_all_stations(2020, 2030)
-# data1 = get_data_station('aberporth', 2020, 2050)
-# data = get_total_data(2020, 2100)
-
-
-
-
-# models = get_model_station('Aberporth')
-#
-# for year in years_to_predict:
-#     temperature_prediction = models[0].predict([[year]])[0]
-#     ecoli_prediction = models[1].predict([[temperature_prediction]])
-#     print("ecoli prediction for {}: {}".format(year, ecoli_prediction))
-
-
-
-
