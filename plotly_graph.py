@@ -11,9 +11,6 @@ name = 'UK E.coli vs. Temperature'
 
 df['years'] = df['years'].map(lambda year: "{}-01-01".format(year))
 
-print(df)
-print(df2)
-
 fig = go.Figure()
 
 # Add traces
