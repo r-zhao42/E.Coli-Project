@@ -18,10 +18,11 @@ please consult our Course Syllabus.
 
 This file is Copyright (c) 2020 David Liu and Mario Badr.
 """
-from typing import Dict, Set, Any, Tuple, List
-import pandas as pd
+from typing import Dict, Any, Tuple, List, Optional
 import os
 import math
+import pandas as pd
+
 
 # Copyright: Hayk Nazaryan
 
@@ -37,8 +38,8 @@ gf = pd.read_csv(hospital_data_with_locations)
 
 
 def find_closest_weather_stations(hospitals: Any, directory: Any) -> Dict[str, List[str]]:
-    """Returns a dictionary with keys being weather stations and the values being the hospitals that are closest to the
-    weather station"""
+    """Returns a dictionary with keys being weather stations and the values being the hospitals
+     that are closest to that weather station"""
 
     # Dictionary accumulator that has keys of weather location names and values of closest hospitals
     my_dict = {}
@@ -47,24 +48,26 @@ def find_closest_weather_stations(hospitals: Any, directory: Any) -> Dict[str, L
     sorted_stations = sort_weather_stations(directory)
 
     for hospital in sorted_hospitals:
-        min_distance = min([calculate_distance(sorted_stations[x], hospital[1]) for x in sorted_stations])
+        min_distance = min([calculate_distance(sorted_stations[station], hospital[1])
+                            for station in sorted_stations])
 
-        for x in sorted_stations:
-            if calculate_distance(sorted_stations[x], hospital[1]) == min_distance:
-                if x in my_dict:
-                    my_dict[x].append(hospital[0])
+        for station in sorted_stations:
+            if calculate_distance(sorted_stations[station], hospital[1]) == min_distance:
+                if station in my_dict:
+                    my_dict[station].append(hospital[0])
 
                 else:
-                    my_dict[x] = [hospital[0]]
+                    my_dict[station] = [hospital[0]]
 
     return my_dict
 
 
-# ------------------------------------------HELPER FUNCTIONS-----------------------------------------------------------
+# ------------------------------------------HELPER FUNCTIONS----------------------------------------
 def sort_weather_stations(directory: Any) -> Dict[str, Tuple[float, float]]:
-    """Returns all the weather stations in the directory, sorted in a dictionary. The keys are the names
-    of the weather stations and the values are their locations."""
+    """Returns all the weather stations in the directory, sorted in a dictionary. The keys are the
+    names of the weather stations and the values are their locations."""
 
+    # Dictionary accumulator for sorting the weather stations
     my_dict = {}
     for file in os.listdir(directory):
         if file.endswith('.txt'):
@@ -99,15 +102,17 @@ def sort_hospitals(hospitals: Any) -> List[Tuple[str, Tuple[float, float]]]:
     return my_list
 
 
-# Here we are opening an example .txt file and converting it into a list of lists, where each line is a list.
+# Here we are opening an example .txt file and converting it into a list of lists,
+# where each line is a list.
 with open(example_txt_file, 'r') as fl:
     data = fl.readlines()
 
     listed_example_file = [x.split() for x in data]
 
 
-def get_monthly_average(year: int, month: int, my_data: list) -> float:
-    """Returns the average from min_temp and max_temp of the given data set from a specified year and month.
+def get_monthly_average(year: int, month: int, my_data: list) -> Optional[float]:
+    """Returns the average from min_temp and max_temp of the given data set from a
+    specified year and month.
 
     Preconditions:
         - year >= 1978
@@ -118,11 +123,16 @@ def get_monthly_average(year: int, month: int, my_data: list) -> float:
         if x[0] == str(year):
             if x[1] == str(month):
                 return (float(x[2]) + float(x[3])) / 2
+            else:
+                return None
+        else:
+            return None
 
 
 def get_location(my_data: list) -> Tuple[float, float]:
     """"Returns the location of a specific weather station data"""
 
+    # Initializing the latitude and longitude strings
     latitude = ''
     longitude = ''
 
@@ -130,7 +140,7 @@ def get_location(my_data: list) -> Tuple[float, float]:
         for i in range(len(x) - 1):
             if x[i] == 'Lat':
                 latitude = latitude + x[i + 1]
-            if x[i] == 'Lon':
+            elif x[i] == 'Lon':
                 longitude = longitude + x[i + 1]
 
     lat_processed = remove_chars(latitude)
@@ -140,7 +150,8 @@ def get_location(my_data: list) -> Tuple[float, float]:
 
 
 def remove_chars(string: str) -> str:
-    """ A helper function that removes any unneccessary characters besides numbers, especially commas and brackets
+    """ A helper function that removes any unneccessary characters besides
+     numbers, especially commas and brackets
 
     Usage:
 
@@ -167,8 +178,9 @@ def calculate_distance(location1: Tuple[float, float],
     delta_lat = math.radians(abs(location1[0] - location2[0]))
     delta_long = math.radians(abs(location1[1] - location2[1]))
 
-    theta = 2 * math.asin(math.sqrt(math.sin(delta_lat / 2) ** 2) +
-                          math.cos(location1[0]) * math.cos(location2[0]) * (math.sin(delta_long) / 2) ** 2)
+    theta = 2 * math.asin(math.sqrt(math.sin(delta_lat / 2) ** 2)
+                          + math.cos(location1[0]) * math.cos(location2[0])
+                          * (math.sin(delta_long) / 2) ** 2)
 
     return theta * EARTH_RADIUS
 
@@ -180,9 +192,9 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
     Preconditions:
         - type(coords) == str
 
-    The format of the string coords must be in the following: '(x, y)'. There must be a space inbetween the
-    variables.
- -
+    The format of the string coords must be in the following: '(x, y)'. There must be a space
+    inbetween the variables.
+
     >>> transform_string_coords('(15.235, -56.1265)')
     (15.235, -56.1265)
 
@@ -196,8 +208,8 @@ def transform_string_coords(coords: str) -> Tuple[float, float]:
 
 
 def check_space(string: str) -> bool:
-    """Return if there is a space after a comma. This is a helper function to check if the dataset in question
-    has proper formatting of string coords.
+    """Return if there is a space after a comma. This is a helper function to check
+    if the dataset in question has proper formatting of string coords.
 
     Usage:
     >>> check_space('(52.123, -455.256)')
@@ -209,7 +221,7 @@ def check_space(string: str) -> bool:
 
     for i in range(len(string)):
         if string[i] == ',':
-            return string[i+1] == ' '
+            return string[i + 1] == ' '
 
         else:
             return False
@@ -217,15 +229,15 @@ def check_space(string: str) -> bool:
 
 if __name__ == '__main__':
     import python_ta
-    # python_ta.check_all(config={
-    #     'extra-imports': ['python_ta.contracts'],
-    #     'max-line-length': 100,
-    #     'disable': ['R1705', 'C0200']
-    # })
-    #
-    # import python_ta.contracts
-    # python_ta.contracts.DEBUG_CONTRACTS = False
-    # python_ta.contracts.check_all_contracts()
-    #
-    # import pytest
-    # pytest.main(['misc1.py'])
+    python_ta.check_all(config={
+        'extra-imports': ['python_ta.contracts'],
+        'max-line-length': 100,
+        'disable': ['R1705', 'C0200']
+    })
+
+    import python_ta.contracts
+    python_ta.contracts.DEBUG_CONTRACTS = False
+    python_ta.contracts.check_all_contracts()
+
+    import pytest
+    pytest.main(['misc1.py'])
