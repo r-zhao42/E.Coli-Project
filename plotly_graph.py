@@ -45,7 +45,9 @@ def plot_graph(end_year: int) -> None:
                             'yanchor': 'top'},
                     font=dict(family="Helvetica", size=18),
                     barmode='stack',
-                    legend_orientation="h")
+                    legend_orientation="h",
+                    xaxis=dict(title='Time (in years)'),
+                    yaxis=dict(title='E.Coli cases'))
 
     fig.show()
 
