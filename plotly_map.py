@@ -7,7 +7,7 @@ import pandas as pd
 import yourmomssklearn
 
 
-def plotly_map(end: int) -> None:
+def plot_map(end_year: int) -> None:
     """
     Plots a map showing the weather stations in the UK and their projected
     increase percentage in E.coli cases.

@@ -6,6 +6,7 @@ import yourmomssklearn
 import plotly.graph_objects as go
 import pandas as pd
 
+
 def plot_your_mom() -> None:
     """
     It plots two things:
@@ -44,5 +45,35 @@ def plot_your_mom() -> None:
                     font=dict(family="Helvetica", size=18),
                     barmode='stack',
                     legend_orientation="h")
+
+    fig.show()
+
+
+def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.DataFrame) -> None:
+    projection['years'] = projection['years'].map(lambda year: "{}-01-01".format(year))
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=projection['years'], y=projection['ecoli'],
+                             name="Past E.coli data",
+                             mode='lines + markers',
+                             marker=dict(
+                                 size=10,
+                                 color=projection['ecoli'],
+                                 showscale=True),
+                             ))
+
+    fig.add_trace(go.Scatter(x=history['x'], y=history['y'],
+                             name='Projected E.coli data',
+                             mode='lines + markers'))
+
+    fig.update_layout(title={
+        'text': name,
+        'y': 0.9,
+        'x': 0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'},
+        font=dict(family="Helvetica", size=18),
+        barmode='stack',
+        legend_orientation="h")
 
     fig.show()
