@@ -101,7 +101,9 @@ def time_temp_model(temperature_data: any) -> any:
     time_to_temperature_model.fit(time_x, temperature_y)
     return time_to_temperature_model
 
+
 def get_temp_prediction(station: str, end_year: int) -> float:
+    """Returns the predicted temperature at the given station at the given year"""
     path = station + 'data.txt'
     with open('Temperature Data/' + path, 'r') as txt:
         temperature_data = txt.readlines()
@@ -123,14 +125,15 @@ def get_temp_prediction(station: str, end_year: int) -> float:
     time_temp = time_temp_model(temperature_data)
     return time_temp.predict([[end_year]])
 
+
 def temp_prediction_all(end_year: int) -> pd.DataFrame:
+    """Returns a dataframe matching station name to predicted temperature
+    at end_year"""
     temp_df = pd.DataFrame(columns=['location', 'temp'])
     for station in WEATHER_STATIONS:
         df2 = pd.DataFrame([[station, get_temp_prediction(station, end_year)]], columns=['location', 'temp'])
         temp_df = temp_df.append(df2)
     return temp_df
-
-
 
 
 def get_data_station(station: str, start_year: int, end_year: int) -> pd.DataFrame:
