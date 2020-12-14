@@ -1,5 +1,5 @@
 """
-This python file generates the graph for past and projected E.coli data in the UK.
+This python file generates the graph for past and projected E.Coli data in the UK.
 """
 
 import yourmomssklearn
@@ -23,7 +23,7 @@ def plot_your_mom() -> None:
 
     # Add traces
     fig.add_trace(go.Scatter(x=df['years'], y=df['ecoli'],
-                            name="Projected E.coli data",
+                            name="Projected E.Coli data",
                             mode='lines + markers',
                             marker=dict(
                                 size=10,
@@ -33,7 +33,7 @@ def plot_your_mom() -> None:
 
 
     fig.add_trace(go.Scatter(x=df2['x'], y=df2['y'],
-                            name='Past E.coli data',
+                            name='Past E.Coli data',
                             mode='lines + markers'))
 
 
@@ -55,7 +55,7 @@ def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.Data
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=projection['years'], y=projection['ecoli'],
-                             name="Past E.coli data",
+                             name="Projected E.Coli data",
                              mode='lines + markers',
                              marker=dict(
                                  size=10,
@@ -64,7 +64,7 @@ def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.Data
                              ))
 
     fig.add_trace(go.Scatter(x=history['x'], y=history['y'],
-                             name='Projected E.coli data',
+                             name='Past E.Coli data',
                              mode='lines + markers'))
 
     fig.update_layout(title={
