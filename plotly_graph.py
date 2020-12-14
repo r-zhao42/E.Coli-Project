@@ -9,9 +9,11 @@ import pandas as pd
 
 def plot_your_mom() -> None:
     """
-    It plots two things:
-        - projected weight of your mother over time
-        - her weight history
+    This plots the total UK E.Coli infection cases over time, past and future.
+    It shows the relationship by the line of linear regression, which consequently also
+    projects future E.Coli Cases.
+
+
     """
     df = yourmomssklearn.get_total_data(2010, 2030)
     df2 = pd.read_excel('totals.xlsx')
