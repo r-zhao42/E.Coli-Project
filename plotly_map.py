@@ -78,7 +78,7 @@ fig.add_trace(go.Scattermapbox(
 
 fig.update_layout(
     title={
-        'text': 'Number of E.coli Cases in all Weather Stations in the UK',
+        'text': 'Percentage of Increase in E.coli Cases for Weather Stations in the UK',
         'y': 0.9,
         'x': 0.5,
         'xanchor': 'center',
