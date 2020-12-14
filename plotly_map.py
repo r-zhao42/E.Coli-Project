@@ -14,6 +14,8 @@ def plot_map(end_year: int) -> None:
     increase percentage in E.Coli cases.
     """
     total = projection.get_percentage_increase(end_year)
+    temps = projection.temp_prediction_all(end_year)
+    print(temps)
 
     mapbox_access_token = 'pk.eyJ1Ijoiam9qb29udGhhdCIsImEiOiJja2lta3Uzbnow' \
                           'YWRtMzVud3NrNjI3N2JjIn0.kYIFPU3HJbjDsNYyQFaGdA'
@@ -23,21 +25,36 @@ def plot_map(end_year: int) -> None:
     site_lon = df.lon
     locations_name = df.text.tolist()
 
+    temp_values = temps['temp'].tolist()
+    max_temp = max(temp_values)
+    min_temp = min(temp_values)
+    temp_diff = max_temp - min_temp
+    location_colors = []
+
     for i in range(len(locations_name)):
         location = locations_name[i]
         locations_name[i] = "{}: Projected to have {:.4f}% of increase until {}".format(
             location.title(), total[location], end_year)
+        temp_value = temps.loc[temps['location'] == location]['temp'][0][0]
+        ratio = (temp_value - min_temp) / temp_diff
+        gb_value = 255 - int(ratio * 255)
+        rgb = 'rgb(255, {}, {})'.format(gb_value, gb_value)
+        location_colors.append(rgb)
+
 
     fig = go.Figure()
 
     fig.add_trace(go.Scattermapbox(
         lat=site_lat,
         lon=site_lon,
-        name='Weather station',
+        name='Weather Station Temperature',
         mode='markers',
-        marker=go.scattermapbox.Marker(
+        marker=dict(
             size=20,
-            color='rgb(255, 218, 200)',  # percentage
+            color=location_colors,
+            colorscale=[[0, "rgb(255, 255, 255)"],
+                        [1, "rgb(255, 0, 0)"]],
+            showscale=False,
             opacity=0.75
         ),
         text=locations_name,
@@ -55,8 +72,11 @@ def plot_map(end_year: int) -> None:
         name='',
         mode='markers',
         marker=go.scattermapbox.Marker(
-            size=14,
-            color='rgb(211, 237, 255)',  # percentage
+            size=0,
+            color=temps['temp'],
+            colorscale=[[0, "rgb(255, 255, 255)"],
+                        [1, "rgb(255, 0, 0)"]],
+            showscale=True,
             opacity=0.75
         ),
         text=locations_name,
@@ -111,5 +131,13 @@ def plot_map(end_year: int) -> None:
     )
 
     fig.update_traces(showlegend=True, selector=dict(type='scattermapbox'))
+
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="top",
+        y=1.00,
+        xanchor="right",
+        x=1.00
+    ))
 
     fig.show()
