@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import pandas as pd
 # Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
 
+
 def plot_graph(end_year: int) -> None:
     """
     This plots the total UK E.Coli infection cases over time, past and future.
@@ -24,30 +25,28 @@ def plot_graph(end_year: int) -> None:
 
     # Add traces
     fig.add_trace(go.Scatter(x=df['years'], y=df['ecoli'],
-                            name="Projected E.Coli data",
-                            mode='lines + markers',
-                            marker=dict(
+                             name="Projected E.Coli data",
+                             mode='lines + markers',
+                             marker=dict(
                                 size=10,
                                 color=df['ecoli'],
                                 showscale=True),
-                            ))
-
+                             ))
 
     fig.add_trace(go.Scatter(x=df2['x'], y=df2['y'],
-                            name='Past E.Coli data',
-                            mode='lines + markers'))
-
+                             name='Past E.Coli data',
+                             mode='lines + markers'))
 
     fig.update_layout(title={'text': NAME_,
-                            'y': 0.9,
-                            'x': 0.5,
-                            'xanchor': 'center',
-                            'yanchor': 'top'},
-                    font=dict(family="Helvetica", size=18),
-                    barmode='stack',
-                    legend_orientation="h",
-                    xaxis=dict(title='Time (in years)'),
-                    yaxis=dict(title='E.Coli cases'))
+                             'y': 0.9,
+                             'x': 0.5,
+                             'xanchor': 'center',
+                             'yanchor': 'top'},
+                      font=dict(family="Helvetica", size=18),
+                      barmode='stack',
+                      legend_orientation="h",
+                      xaxis=dict(title='Time (in years)'),
+                      yaxis=dict(title='E.Coli cases'))
 
     fig.show()
 
