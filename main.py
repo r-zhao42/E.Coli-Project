@@ -10,7 +10,7 @@ HOSPITAL_DATA_WITH_LOCATIONS = 'Monthly E.Coli 2012-2020 with Location.csv'
 WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
 
 
-def run_all_weather_stations():
+def run_all_weather_stations() -> None:
     """This function is responsible for running our project:
 
     It should first run a modelled graph
@@ -23,7 +23,7 @@ def run_all_weather_stations():
     plot_map(2100)
 
 
-def run_individual_weather_station(name: str, start_year: int, end_year):
+def run_individual_weather_station(name: str, start_year: int, end_year: int) -> None:
     """Returns the individual plotly graph of individual weather stations."""
 
     projection = yourmomssklearn.get_data_station(name, start_year, end_year)
@@ -34,10 +34,12 @@ def run_individual_weather_station(name: str, start_year: int, end_year):
     history_frame = history.to_frame().reset_index()
     history_frame.columns = ['x', 'y']
 
-    # yourmomsweatherstation(name, history_frame, projection)
+    yourmomsweatherstation(name, history_frame, projection)
 
+    print(projection)
     print(history_frame)
 
 
 if __name__ == '__main__':
     print('This is main')
+    run_individual_weather_station('aberporth', 2010, 2100)

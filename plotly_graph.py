@@ -50,7 +50,8 @@ def plot_your_mom() -> None:
 
 
 def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.DataFrame) -> None:
-    projection['years'] = projection['years'].map(lambda year: "{}-01-01".format(year))
+    projection['years'] = projection['years'].map("{}-01-01".format)
+    projection['ecoli'] = projection['ecoli'].map(lambda value: value[0])
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=projection['years'], y=projection['ecoli'],
