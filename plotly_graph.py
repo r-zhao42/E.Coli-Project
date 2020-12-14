@@ -50,6 +50,11 @@ def plot_your_mom() -> None:
 
 
 def yourmomsweatherstation(name: str, history: pd.DataFrame, projection: pd.DataFrame) -> None:
+    """
+        Plots the individual graph for individual weather stations. Each weather station has a name which
+        you enter in the name argument. History is derived from the E.Coli sorting file and the projection
+        is derived from the sklearn modelling file.
+        """
     projection['years'] = projection['years'].map("{}-01-01".format)
     projection['ecoli'] = projection['ecoli'].map(lambda value: value[0])
 
