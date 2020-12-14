@@ -142,13 +142,10 @@ def get_percentage_increase_all_stations(start: int, end: int):
     station_codes = misc1.find_closest_weather_stations(misc1.hospital_data_with_locations, misc1.weather_stations_directory)
     result_so_far = {}
     for station in projection:
-        print(station)
         past_data = e_coli_data.total_infections_by_codes(station_codes[station])
         total = past_data.sum(axis=0)
         average = total / len(past_data.index)
         df = projection[station]
-        print(past_data)
-        print(df)
         for i in range(len(df.index)):
             df.iat[i, 1] = ((df.iat[i, 1] / average) - 1) * 100
         result_so_far[station] = df
