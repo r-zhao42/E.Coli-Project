@@ -5,7 +5,6 @@ from misc1 import find_closest_weather_stations
 from e_coli_data import total_infections_by_codes
 import misc1
 import e_coli_data
-import sklearn
 from sklearn import linear_model
 from typing import Dict, Tuple
 
@@ -127,7 +126,7 @@ def get_data_station(station: str, start_year: int, end_year: int) -> pd.DataFra
     """
     years_to_predict = [year for year in range(start_year, end_year + 1)]
     model = get_model_station(station)
-    df = pd.DataFrame(columns=list('AB'))
+    df = pd.DataFrame(columns=['years', 'ecoli'])
 
     time_temp_model = model[0]
     temp_ecoli_model = model[1]
@@ -135,7 +134,7 @@ def get_data_station(station: str, start_year: int, end_year: int) -> pd.DataFra
     for year in years_to_predict:
         temperature_prediction = time_temp_model.predict([[year]])[0]
         ecoli_prediction = temp_ecoli_model.predict([[temperature_prediction]])
-        df2 = pd.DataFrame([[year, ecoli_prediction]], columns=list('AB'))
+        df2 = pd.DataFrame([[year, ecoli_prediction]], columns=['years', 'ecoli'])
         df = df.append(df2)
     return df
 
@@ -177,7 +176,7 @@ def get_total_data(start_year: int, end_year: int) -> pd.DataFrame:
         dfs.append(get_data_station(station, start_year, end_year))
     df = dfs[0]
     for i in range(len(dfs) - 1):
-        df = df.merge(dfs[i+1], on='A')
+        df = df.merge(dfs[i+1], on='years')
     sums = df.iloc[:, 1:].sum(axis=1)
     sums.name = 'ecoli'
     years = df.iloc[:, 0]

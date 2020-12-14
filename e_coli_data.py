@@ -1,7 +1,6 @@
 import pandas as pd
 from typing import List
 import datetime
-import misc1
 
 ECOLI_DATA = pd.read_csv('Monthly E.Coli 2012-2020.csv')
 
