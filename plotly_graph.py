@@ -5,7 +5,7 @@ This python file generates the graph for past and projected E.Coli data in the U
 import projection
 import plotly.graph_objects as go
 import pandas as pd
-
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
 
 def plot_graph(end_year: int) -> None:
     """

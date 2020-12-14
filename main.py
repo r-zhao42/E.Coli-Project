@@ -33,20 +33,18 @@ def run_individual_station(name: str, start_year: int, end_year: int) -> None:
 
     """
     identifier = name.lower().replace(' ', '').replace('-', '')
-    projection = projection.get_data_station(identifier, start_year, end_year)
+    projections = projection.get_data_station(identifier, start_year, end_year)
 
     data = location_data.find_closest_weather_stations(HOSPITAL_DATA_WITH_LOCATIONS, WEATHER_STATIONS_DIRECTORY)
 
-    history = ECOLI_DATA.total_infections_by_codes(data[name])
+    history = ECOLI_DATA.total_infections_by_codes(data[identifier])
     history_frame = history.to_frame().reset_index()
     history_frame.columns = ['x', 'y']
 
-    plot_individual(name, history_frame, projection)
+    plot_individual(name, history_frame, projections)
 
     print(projection)
     print(history_frame)
-
-
 
 
 if __name__ == '__main__':

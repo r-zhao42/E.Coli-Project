@@ -24,7 +24,7 @@ import math
 import pandas as pd
 
 
-# Copyright: Hayk Nazaryan
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
 
 # Variables containing the paths for the files and directories. Can be used for testing.
 EXAMPLE_TXT_FILE = 'Temperature Data/lerwickdata.txt'

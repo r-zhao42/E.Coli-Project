@@ -5,6 +5,7 @@ increase percentage in E.Coli cases.
 import plotly.graph_objects as go
 import pandas as pd
 import projection
+# Copyright: Hayk Nazaryan, Ryan Zhao, Joanne Pan, Cliff Zhang
 
 
 def plot_map(end_year: int) -> None:
