@@ -12,14 +12,16 @@ WEATHER_STATIONS_DIRECTORY = 'Temperature Data'
 def run_all_stations(end_year: int) -> None:
     """This function is responsible for running the entirety our project:
 
-    It should first run a modelled graph of the all the UK E.Coli infections
+    It should first run a modelled graph of the all the UK E.Coli infections until the specified year
+    in the argument end_year
 
     And second, overlay of data on a map using MapBox. The data is the percent of
-    increase of E.Coli cases from 2020 until 2100.
+    increase of E.Coli cases from 2020 until the given end_year in the argument of
+    run_all_stations.
 
     """
 
-    plot_your_mom()
+    plot_your_mom(end_year)
     plot_map(end_year)
 
 
