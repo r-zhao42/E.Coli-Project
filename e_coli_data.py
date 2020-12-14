@@ -60,9 +60,13 @@ def get_total_month(year: int, month: int) -> int:
     return ECOLI_DATA[date].sum()
 
 
-def infections_by_code(code: str) -> pd.DataFrame:
+def infections_by_code(code: str) -> pd.Series:
     """Returns a panda dataframe containing all the infection data for the
-    hospital specified by the code"""
+    hospital specified by the code
+
+    Preconditions
+        - ECOLI_DATA.iloc[:,0].isin(code).any()
+    """
     tp = ECOLI_DATA.transpose()
     new_header = tp.iloc[0]
     tp.columns = new_header
@@ -71,7 +75,11 @@ def infections_by_code(code: str) -> pd.DataFrame:
 
 def infections_by_codes(codes: List[str]) -> pd.DataFrame:
     """Return a data set containing infections for all the hospitals specified
-    in the codes"""
+    in the codes
+
+    Precondition:
+        - all(ECOLI_DATA.iloc[:, 0].isin([code]).any() for code in codes)
+    """
     dfs = []
     for code in codes:
         dfs.append(infections_by_code(code))
@@ -83,7 +91,11 @@ def infections_by_codes(codes: List[str]) -> pd.DataFrame:
 
 def total_infections_by_codes(codes: List[str]) -> pd.Series:
     """Returns a series of the total infections in the hospitals specified
-    in codes"""
+    in codes
+
+    Preconditions:
+        - all(ECOLI_DATA.iloc[:, 0].isin([code]).any() for code in codes)
+    """
     df = infections_by_codes(codes)
     if type(df) == pd.Series:
         df = df.to_frame()
