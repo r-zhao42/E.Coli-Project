@@ -12,7 +12,7 @@ def plot_map(end_year: int) -> None:
     Plots a map showing the weather stations in the UK and their projected
     increase percentage in E.Coli cases.
     """
-    total = yourmomssklearn.get_percentage_increase(end)
+    total = yourmomssklearn.get_percentage_increase(end_year)
 
     mapbox_access_token = 'pk.eyJ1Ijoiam9qb29udGhhdCIsImEiOiJja2lta3Uzbnow' \
                           'YWRtMzVud3NrNjI3N2JjIn0.kYIFPU3HJbjDsNYyQFaGdA'
@@ -25,7 +25,7 @@ def plot_map(end_year: int) -> None:
     for i in range(len(locations_name)):
         location = locations_name[i]
         locations_name[i] = "{}: Projected to have {:.4f}% of increase until {}".format(
-            location.title(), total[location], end)
+            location.title(), total[location], end_year)
 
     fig = go.Figure()
 
