@@ -19,7 +19,7 @@ def run_all_stations(end_year: int) -> None:
 
     """
 
-    plot_your_mom(end_year)
+    plot_your_mom()
     plot_map(end_year)
 
 
@@ -48,4 +48,5 @@ def run_individual_station(name: str, start_year: int, end_year: int) -> None:
 
 
 if __name__ == '__main__':
-    run_all_stations(2100)
+    print('This is main')
+

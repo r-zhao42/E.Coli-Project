@@ -176,12 +176,12 @@ def calculate_distance(location1: Tuple[float, float],
 
     """
 
-    delta_lat = math.radians(abs(location1[0] - location2[0]))
-    delta_long = math.radians(abs(location1[1] - location2[1]))
+    delta_lat = math.radians(location1[0] - location2[0])
+    delta_long = math.radians(location1[1] - location2[1])
 
-    theta = 2 * math.asin(math.sqrt(math.sin(delta_lat / 2) ** 2)
-                          + math.cos(location1[0]) * math.cos(location2[0])
-                          * (math.sin(delta_long) / 2) ** 2)
+    theta = 2 * math.asin(math.sqrt((math.sin(delta_lat / 2) ** 2) +
+                          math.cos(math.radians(location1[0])) * math.cos(math.radians(location2[0]))
+                                    * (math.sin(delta_long) / 2) ** 2))
 
     return theta * EARTH_RADIUS
 
@@ -230,15 +230,15 @@ def check_space(string: str) -> bool:
 
 if __name__ == '__main__':
     import python_ta
-    python_ta.check_all(config={
-        'extra-imports': ['python_ta.contracts'],
-        'max-line-length': 100,
-        'disable': ['R1705', 'C0200']
-    })
-
-    import python_ta.contracts
-    python_ta.contracts.DEBUG_CONTRACTS = False
-    python_ta.contracts.check_all_contracts()
-
-    import pytest
-    pytest.main(['misc1.py'])
+    # python_ta.check_all(config={
+    #     'extra-imports': ['python_ta.contracts'],
+    #     'max-line-length': 100,
+    #     'disable': ['R1705', 'C0200']
+    # })
+    #
+    # import python_ta.contracts
+    # python_ta.contracts.DEBUG_CONTRACTS = False
+    # python_ta.contracts.check_all_contracts()
+    #
+    # import pytest
+    # pytest.main(['misc1.py'])
